@@ -1,3 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catch the Falling Object Game</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #f0f0f0;
+    }
+    #gameArea {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background-color: #87CEEB;
+    }
+    #player {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 80px;
+      background-color: red;
+      border-radius: 50%;
+    }
+    .fallingObject {
+      position: absolute;
+      top: -50px;
+      width: 40px;
+      height: 40px;
+      background-color: orange;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+
+<div id="gameArea">
+  <div id="player"></div>
+</div>
+
+<script>
+  const gameArea = document.getElementById('gameArea');
+  const player = document.getElementById('player');
+  let playerSpeed = 20;
+
+  // Handle player movement
+  document.addEventListener('keydown', (event) => {
+    const left = player.offsetLeft;
+    if (event.key === 'ArrowLeft' && left > 0) {
+      player.style.left = left - playerSpeed + 'px';
+    } else if (event.key === 'ArrowRight' && left + player.offsetWidth < gameArea.offsetWidth) {
+      player.style.left = left + playerSpeed + 'px';
+    }
+  });
+
+  // Function to generate falling objects
+  function createFallingObject() {
+    const object = document.createElement('div');
+    object.classList.add('fallingObject');
+    object.style.left = Math.random() * (gameArea.offsetWidth - 40) + 'px';
+    gameArea.appendChild(object);
+
+    let fallingSpeed = Math.random() * 5 + 2;
+
+    // Make the object fall
+    const fallInterval = setInterval(() => {
+      const objectTop = object.offsetTop;
+      if (objectTop > gameArea.offsetHeight - 100) {
+        clearInterval(fallInterval);
+        object.remove();
+      } else {
+        object.style.top = objectTop + fallingSpeed + 'px';
+
+        // Check if caught by player
+        if (objectTop + 40 >= gameArea.offsetHeight - 90 &&
+          object.offsetLeft > player.offsetLeft &&
+          object.offsetLeft < player.offsetLeft + player.offsetWidth) {
+          clearInterval(fallInterval);
+          object.remove();
+          alert('Caught!');
+        }
+      }
+    }, 20);
+  }
+
+  // Create falling objects every 2 seconds
+  setInterval(createFallingObject, 2000);
+</script>
+
+</body>
+</html>
+
 #EXTM3U
 #EXTM3U x-tvg-url="https://avkb.short.gy/tsepg.xml.gz"
 
